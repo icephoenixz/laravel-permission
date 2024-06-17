@@ -3,6 +3,7 @@
 namespace Spatie\Permission\Tests;
 
 use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Foundation\Console\AboutCommand;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Cache;
@@ -77,6 +78,15 @@ abstract class TestCase extends Orchestra
         }
 
         $this->setUpRoutes();
+    }
+
+    protected function tearDown(): void
+    {
+        parent::tearDown();
+
+        if (method_exists(AboutCommand::class, 'flushState')) {
+            AboutCommand::flushState();
+        }
     }
 
     /**
@@ -157,6 +167,13 @@ abstract class TestCase extends Orchestra
             $table->string('email');
         });
 
+        $schema->create('content', function (Blueprint $table) {
+            $table->increments('id');
+            $table->string('content');
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->timestamps();
+        });
+
         if (Cache::getStore() instanceof \Illuminate\Cache\DatabaseStore ||
             $app[PermissionRegistrar::class]->getCacheStore() instanceof \Illuminate\Cache\DatabaseStore) {
             $this->createCacheTable();
@@ -196,8 +213,12 @@ abstract class TestCase extends Orchestra
         $app['config']->set('permission.use_passport_client_credentials', true);
         $app['config']->set('auth.guards.api', ['driver' => 'passport', 'provider' => 'users']);
 
-        $this->artisan('migrate');
-        $this->artisan('passport:install');
+        // mimic passport:install (must load migrations using our own call to loadMigrationsFrom() else rollbacks won't occur, and migrations will be left in skeleton directory
+        $this->artisan('passport:keys');
+        $this->loadMigrationsFrom(__DIR__.'/../vendor/laravel/passport/database/migrations/');
+        $provider = in_array('users', array_keys(config('auth.providers'))) ? 'users' : null;
+        $this->artisan('passport:client', ['--personal' => true, '--name' => config('app.name').' Personal Access Client']);
+        $this->artisan('passport:client', ['--password' => true, '--name' => config('app.name').' Password Grant Client', '--provider' => $provider]);
 
         $this->testClient = Client::create(['name' => 'Test', 'redirect' => 'https://example.com', 'personal_access_client' => 0, 'password_client' => 0, 'revoked' => 0]);
         $this->testClientRole = $app[Role::class]->create(['name' => 'clientRole', 'guard_name' => 'api']);

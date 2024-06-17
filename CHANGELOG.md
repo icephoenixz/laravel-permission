@@ -2,6 +2,186 @@
 
 All notable changes to `laravel-permission` will be documented in this file
 
+## 6.7.0 - 2024-04-19
+
+### What's Changed
+
+- Fixed remaining Octane event contract. Update to #2656 in release `6.5.0`
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.6.0...6.7.0
+
+## 6.6.0 - 2024-04-19
+
+### What's Changed
+
+* Roles: Support for casting role names to enums by @gajosadrian in https://github.com/spatie/laravel-permission/pull/2616
+* Fix permission:show UUID error #2581 by @drbyte in https://github.com/spatie/laravel-permission/pull/2582
+* Cover WilcardPermission instance verification based on its own guard (Allow hasAllPermissions and hasAnyPermission to run on custom guard for WildcardPermission) by @AlexandreBellas in https://github.com/spatie/laravel-permission/pull/2608
+* Register Laravel "About" details by @drbyte in https://github.com/spatie/laravel-permission/pull/2584
+
+### New Contributors
+
+* @gajosadrian made their first contribution in https://github.com/spatie/laravel-permission/pull/2616
+* @AlexandreBellas made their first contribution in https://github.com/spatie/laravel-permission/pull/2608
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.5.0...6.6.0
+
+## 6.5.0 - 2024-04-18
+
+### What's Changed
+
+* Octane: Fix wrong event listener by @erikn69 in https://github.com/spatie/laravel-permission/pull/2656
+* Teams: Add nullable team_id by @Androlax2 in https://github.com/spatie/laravel-permission/pull/2607
+* Blade: simplify the definition of multiple Blade "if" directives by @alissn in https://github.com/spatie/laravel-permission/pull/2628
+* DocBlocks: Update HasPermissions::collectPermissions() docblock by @Plytas in https://github.com/spatie/laravel-permission/pull/2641
+
+#### Internals
+
+* Update role-permissions.md by @killjin in https://github.com/spatie/laravel-permission/pull/2631
+* Bump ramsey/composer-install from 2 to 3 by @dependabot in https://github.com/spatie/laravel-permission/pull/2630
+* Bump dependabot/fetch-metadata from 1 to 2 by @dependabot in https://github.com/spatie/laravel-permission/pull/2642
+
+### New Contributors
+
+* @alissn made their first contribution in https://github.com/spatie/laravel-permission/pull/2628
+* @Androlax2 made their first contribution in https://github.com/spatie/laravel-permission/pull/2607
+* @Plytas made their first contribution in https://github.com/spatie/laravel-permission/pull/2641
+* @killjin made their first contribution in https://github.com/spatie/laravel-permission/pull/2631
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.4.0...6.5.0
+
+## 6.4.0 - 2024-02-28
+
+* Laravel 11 Support
+
+### What's Changed
+
+* Add Laravel 11 to workflow run tests by @mraheelkhan in https://github.com/spatie/laravel-permission/pull/2605
+* And Passport 12
+
+### Internals
+
+* Update to use Larastan Org by @arnebr in https://github.com/spatie/laravel-permission/pull/2585
+* laravel-pint-action to major version tag by @erikn69 in https://github.com/spatie/laravel-permission/pull/2586
+
+### New Contributors
+
+* @arnebr made their first contribution in https://github.com/spatie/laravel-permission/pull/2585
+* @mraheelkhan made their first contribution in https://github.com/spatie/laravel-permission/pull/2605
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.3.0...6.4.0
+
+## 6.3.0 - 2023-12-24
+
+### What's Changed
+
+* Octane Fix: Clear wildcard permissions on Tick in https://github.com/spatie/laravel-permission/pull/2583
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.2.0...6.3.0
+
+## 6.2.0 - 2023-12-09
+
+### What's Changed
+
+* Skip duplicates on sync (was triggering Integrity Constraint Violation error) by @erikn69 in https://github.com/spatie/laravel-permission/pull/2574
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.1.0...6.2.0
+
+## 6.1.0 - 2023-11-09
+
+### What's Changed
+
+- Reset teamId on Octane by @erikn69 in https://github.com/spatie/laravel-permission/pull/2547
+  NOTE: The `\Spatie\Permission\Listeners\OctaneReloadPermissions` listener introduced in 6.0.0 is removed in 6.1.0, because the logic is directly incorporated into the ServiceProvider now.
+  
+  Thanks @jameshulse for the heads-up and code-review.
+  
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.0.1...6.1.0
+
+## 6.0.1 - 2023-11-06
+
+### What's Changed
+
+- Provide a default team_foreign_key value in case config file isn't upgraded yet or teams feature is unused. Fixes #2535
+- [Docs] Update unsetRelation() example in teams-permissions.md by @shdehnavi in https://github.com/spatie/laravel-permission/pull/2534
+- [Docs] Update link in direct-permissions.md by @sevannerse in https://github.com/spatie/laravel-permission/pull/2539
+
+### New Contributors
+
+- @sevannerse made their first contribution in https://github.com/spatie/laravel-permission/pull/2539
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.0.0...6.0.1
+
+## 6.0.0 - 2023-10-25
+
+### What's Changed
+
+- Full uuid/guid/ulid support by @erikn69 in https://github.com/spatie/laravel-permission/pull/2089
+- Refactor: Change static properties to non-static by @olivernybroe in https://github.com/spatie/laravel-permission/pull/2324
+- Fix Role::withCount if belongsToMany declared by @xenaio-daniil in https://github.com/spatie/laravel-permission/pull/2280
+- Fix: Lazily bind dependencies by @olivernybroe in https://github.com/spatie/laravel-permission/pull/2321
+- Avoid loss of all permissions/roles pivots on sync error by @erikn69 in https://github.com/spatie/laravel-permission/pull/2341
+- Fix delete permissions on Permissions Model by @erikn69 in https://github.com/spatie/laravel-permission/pull/2366
+- Detach users on role/permission physical deletion by @erikn69 in https://github.com/spatie/laravel-permission/pull/2370
+- Rename clearClassPermissions method to clearPermissionsCollection by @erikn69 in https://github.com/spatie/laravel-permission/pull/2369
+- Use anonymous migrations (for L8+) by @erikn69 in https://github.com/spatie/laravel-permission/pull/2374
+- [BC] Return string on getPermissionClass(), getRoleClass() by @erikn69 in https://github.com/spatie/laravel-permission/pull/2368
+- Only offer publishing when running in console by @erikn69 in https://github.com/spatie/laravel-permission/pull/2377
+- Don't add commands in web interface context by @angeljqv in https://github.com/spatie/laravel-permission/pull/2405
+- [BC] Fix Role->hasPermissionTo() signature to match HasPermissions trait by @erikn69 in https://github.com/spatie/laravel-permission/pull/2380
+- Force that getPermissionsViaRoles, hasPermissionViaRole must be used only by authenticable by @erikn69 in https://github.com/spatie/laravel-permission/pull/2382
+- fix BadMethodCallException: undefined methods hasAnyRole, hasAnyPermissions by @erikn69 in https://github.com/spatie/laravel-permission/pull/2381
+- Add PHPStan workflow with fixes by @erikn69 in https://github.com/spatie/laravel-permission/pull/2376
+- Add BackedEnum support by @drbyte in https://github.com/spatie/laravel-permission/pull/2391
+- Drop PHP 7.3 support by @angeljqv in https://github.com/spatie/laravel-permission/pull/2388
+- Drop PHP 7.4 support by @drbyte in https://github.com/spatie/laravel-permission/pull/2485
+- Test against PHP 8.3 by @erikn69 in https://github.com/spatie/laravel-permission/pull/2512
+- Fix call to an undefined method Role::getRoleClass by @erikn69 in https://github.com/spatie/laravel-permission/pull/2411
+- Remove force loading model relationships by @erikn69 in https://github.com/spatie/laravel-permission/pull/2412
+- Test alternate cache drivers by @erikn69 in https://github.com/spatie/laravel-permission/pull/2416
+- Use attach instead of sync on traits by @erikn69 in https://github.com/spatie/laravel-permission/pull/2420
+- Fewer sqls in syncRoles, syncPermissions by @erikn69 in https://github.com/spatie/laravel-permission/pull/2423
+- Add middleware using static method by @jnoordsij in https://github.com/spatie/laravel-permission/pull/2424
+- Update PHPDocs for IDE autocompletion by @erikn69 in https://github.com/spatie/laravel-permission/pull/2437
+- [BC] Wildcard permissions algorithm performance improvements (ALERT: Breaking Changes) by @danharrin in https://github.com/spatie/laravel-permission/pull/2445
+- Add withoutRole and withoutPermission scopes by @drbyte in https://github.com/spatie/laravel-permission/pull/2463
+- Add support for service-to-service Passport client by @SuperDJ in https://github.com/spatie/laravel-permission/pull/2467
+- Register OctaneReloadPermissions listener for Laravel Octane by @erikn69 in https://github.com/spatie/laravel-permission/pull/2403
+- Add guard name to exceptions by @drbyte in https://github.com/spatie/laravel-permission/pull/2481
+- Update contracts to allow for UUID by @drbyte in https://github.com/spatie/laravel-permission/pull/2480
+- Avoid triggering eloquent.retrieved event by @erikn69 in https://github.com/spatie/laravel-permission/pull/2498
+- [BC] Rename "Middlewares" namespace to "Middleware" by @drbyte in https://github.com/spatie/laravel-permission/pull/2499
+- `@haspermission` directive by @axlwild in https://github.com/spatie/laravel-permission/pull/2515
+- Add guard parameter to can() by @drbyte in https://github.com/spatie/laravel-permission/pull/2526
+
+### New Contributors
+
+- @xenaio-daniil made their first contribution in https://github.com/spatie/laravel-permission/pull/2280
+- @JensvandeWiel made their first contribution in https://github.com/spatie/laravel-permission/pull/2336
+- @fsamapoor made their first contribution in https://github.com/spatie/laravel-permission/pull/2361
+- @yungifez made their first contribution in https://github.com/spatie/laravel-permission/pull/2394
+- @HasanEksi made their first contribution in https://github.com/spatie/laravel-permission/pull/2418
+- @jnoordsij made their first contribution in https://github.com/spatie/laravel-permission/pull/2424
+- @danharrin made their first contribution in https://github.com/spatie/laravel-permission/pull/2445
+- @SuperDJ made their first contribution in https://github.com/spatie/laravel-permission/pull/2467
+- @ChillMouse made their first contribution in https://github.com/spatie/laravel-permission/pull/2438
+- @Okipa made their first contribution in https://github.com/spatie/laravel-permission/pull/2492
+- @edalzell made their first contribution in https://github.com/spatie/laravel-permission/pull/2494
+- @sirosfakhri made their first contribution in https://github.com/spatie/laravel-permission/pull/2501
+- @juliangums made their first contribution in https://github.com/spatie/laravel-permission/pull/2516
+- @nnnnnnnngu made their first contribution in https://github.com/spatie/laravel-permission/pull/2524
+- @axlwild made their first contribution in https://github.com/spatie/laravel-permission/pull/2515
+- @shdehnavi made their first contribution in https://github.com/spatie/laravel-permission/pull/2527
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/5.11.1...6.0.0
+
+## 5.11.1 - 2023-10-25
+
+No functional changes. Just several small updates to the Documentation.
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/5.11.0...5.11.1
+
 ## 5.11.0 - 2023-08-30
 
 ### What's Changed
@@ -627,6 +807,16 @@ The following changes are not "breaking", but worth making the updates to your a
 
 
 
+
+
+
+
+
+
+
+
+
+
 ```
 1. Also this is a good time to point out that now with v2.25.0 and v2.26.0 most permission-cache-reset scenarios may no longer be needed in your app, so it's worth reviewing those cases, as you may gain some app speed improvement by removing unnecessary cache resets.
 
@@ -674,6 +864,16 @@ The following changes are not "breaking", but worth making the updates to your a
 @elserole('roleB')
  // user hasRole 'roleB' but not 'roleA'
 @endrole
+
+
+
+
+
+
+
+
+
+
 
 
 

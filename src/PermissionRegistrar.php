@@ -36,8 +36,7 @@ class PermissionRegistrar
 
     public string $teamsKey;
 
-    /** @var int|string */
-    protected $teamId = null;
+    protected string|int|null $teamId = null;
 
     public string $cacheKey;
 
@@ -66,7 +65,7 @@ class PermissionRegistrar
         $this->cacheExpirationTime = config('permission.cache.expiration_time') ?: \DateInterval::createFromDateString('24 hours');
 
         $this->teams = config('permission.teams', false);
-        $this->teamsKey = config('permission.column_names.team_foreign_key');
+        $this->teamsKey = config('permission.column_names.team_foreign_key', 'team_id');
 
         $this->cacheKey = config('permission.cache.key');
 
@@ -98,7 +97,7 @@ class PermissionRegistrar
     /**
      * Set the team id for teams/groups support, this id is used when querying permissions/roles
      *
-     * @param  int|string|\Illuminate\Database\Eloquent\Model  $id
+     * @param  int|string|\Illuminate\Database\Eloquent\Model|null  $id
      */
     public function setPermissionsTeamId($id): void
     {
@@ -109,7 +108,7 @@ class PermissionRegistrar
     }
 
     /**
-     * @return int|string
+     * @return int|string|null
      */
     public function getPermissionsTeamId()
     {
@@ -122,9 +121,12 @@ class PermissionRegistrar
      */
     public function registerPermissions(Gate $gate): bool
     {
-        $gate->before(function (Authorizable $user, string $ability) {
+        $gate->before(function (Authorizable $user, string $ability, array &$args = []) {
+            if (is_string($args[0] ?? null) && ! class_exists($args[0])) {
+                $guard = array_shift($args);
+            }
             if (method_exists($user, 'checkPermissionTo')) {
-                return $user->checkPermissionTo($ability) ?: null;
+                return $user->checkPermissionTo($ability, $guard ?? null) ?: null;
             }
         });
 
@@ -142,7 +144,7 @@ class PermissionRegistrar
         return $this->cache->forget($this->cacheKey);
     }
 
-    public function forgetWildcardPermissionIndex(Model $record = null): void
+    public function forgetWildcardPermissionIndex(?Model $record = null): void
     {
         if ($record) {
             unset($this->wildcardPermissionsIndex[get_class($record)][$record->getKey()]);
@@ -170,6 +172,7 @@ class PermissionRegistrar
     public function clearPermissionsCollection(): void
     {
         $this->permissions = null;
+        $this->wildcardPermissionsIndex = [];
     }
 
     /**
@@ -184,7 +187,7 @@ class PermissionRegistrar
 
     /**
      * Load permissions from cache
-     * This get cache and turns array into \Illuminate\Database\Eloquent\Collection
+     * And turns permissions array into a \Illuminate\Database\Eloquent\Collection
      */
     private function loadPermissions(): void
     {
@@ -354,12 +357,11 @@ class PermissionRegistrar
 
     private function getHydratedPermissionCollection(): Collection
     {
-        $permissionClass = $this->getPermissionClass();
-        $permissionInstance = new $permissionClass();
+        $permissionInstance = new ($this->getPermissionClass())();
 
         return Collection::make(array_map(
-            fn ($item) => $permissionInstance
-                ->newFromBuilder($this->aliasedArray(array_diff_key($item, ['r' => 0])))
+            fn ($item) => $permissionInstance->newInstance([], true)
+                ->setRawAttributes($this->aliasedArray(array_diff_key($item, ['r' => 0])), true)
                 ->setRelation('roles', $this->getHydratedRoleCollection($item['r'] ?? [])),
             $this->permissions['permissions']
         ));
@@ -374,11 +376,11 @@ class PermissionRegistrar
 
     private function hydrateRolesCache(): void
     {
-        $roleClass = $this->getRoleClass();
-        $roleInstance = new $roleClass();
+        $roleInstance = new ($this->getRoleClass())();
 
         array_map(function ($item) use ($roleInstance) {
-            $role = $roleInstance->newFromBuilder($this->aliasedArray($item));
+            $role = $roleInstance->newInstance([], true)
+                ->setRawAttributes($this->aliasedArray($item), true);
             $this->cachedRoles[$role->getKey()] = $role;
         }, $this->permissions['roles']);
 

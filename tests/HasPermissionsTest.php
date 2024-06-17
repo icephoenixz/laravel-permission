@@ -21,6 +21,19 @@ class HasPermissionsTest extends TestCase
     }
 
     /** @test */
+    public function it_can_assign_a_permission_to_a_user_with_a_non_default_guard()
+    {
+        $testUserPermission = app(Permission::class)->create([
+            'name' => 'edit-articles',
+            'guard_name' => 'api',
+        ]);
+
+        $this->testUser->givePermissionTo($testUserPermission);
+
+        $this->assertTrue($this->testUser->hasPermissionTo($testUserPermission));
+    }
+
+    /** @test */
     public function it_throws_an_exception_when_assigning_a_permission_that_does_not_exist()
     {
         $this->expectException(PermissionDoesNotExist::class);
@@ -539,6 +552,16 @@ class HasPermissionsTest extends TestCase
         $this->assertTrue($this->testUser->hasDirectPermission('edit-blog'));
 
         $this->assertFalse($this->testUser->hasDirectPermission('edit-news'));
+    }
+
+    /** @test */
+    public function it_can_avoid_sync_duplicated_permissions()
+    {
+        $this->testUser->syncPermissions('edit-articles', 'edit-blog', 'edit-blog');
+
+        $this->assertTrue($this->testUser->hasDirectPermission('edit-articles'));
+
+        $this->assertTrue($this->testUser->hasDirectPermission('edit-blog'));
     }
 
     /** @test */

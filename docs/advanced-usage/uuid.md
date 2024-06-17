@@ -1,13 +1,15 @@
 ---
-title: UUID
+title: UUID/ULID
 weight: 7
 ---
 
-If you're using UUIDs for your User models there are a few considerations to note.
+If you're using UUIDs (ULID, GUID, etc) for your User models or Role/Permission models there are a few considerations to note.
 
-> THIS IS NOT A FULL LESSON ON HOW TO IMPLEMENT UUIDs IN YOUR APP.
+> NOTE: THIS IS NOT A FULL LESSON ON HOW TO IMPLEMENT UUIDs IN YOUR APP.
 
 Since each UUID implementation approach is different, some of these may or may not benefit you. As always, your implementation may vary.
+
+We use "uuid" in the examples below. Adapt for ULID or GUID as needed.
 
 ## Migrations
 You will need to update the `create_permission_tables.php` migration after creating it with `php artisan vendor:publish`. After making your edits, be sure to run the migration!
@@ -38,11 +40,11 @@ If you also want the roles and permissions to use a UUID for their `id` value, t
     });
 
     Schema::create($tableNames['model_has_permissions'], function (Blueprint $table) use ($tableNames, $columnNames) {
--        $table->unsignedBigInteger(PermissionRegistrar::$pivotPermission);
-+        $table->uuid(PermissionRegistrar::$pivotPermission);
+-        $table->unsignedBigInteger($pivotPermission);
++        $table->uuid($pivotPermission);
         $table->string('model_type');
 //...
-        $table->foreign(PermissionRegistrar::$pivotPermission)
+        $table->foreign($pivotPermission)
 -            ->references('id') // permission id
 +            ->references('uuid') // permission id
             ->on($tableNames['permissions'])
@@ -50,26 +52,38 @@ If you also want the roles and permissions to use a UUID for their `id` value, t
 //...
 
     Schema::create($tableNames['model_has_roles'], function (Blueprint $table) use ($tableNames, $columnNames) {
--        $table->unsignedBigInteger(PermissionRegistrar::$pivotRole);
-+        $table->uuid(PermissionRegistrar::$pivotRole);
+-        $table->unsignedBigInteger($pivotRole);
++        $table->uuid($pivotRole);
 //...
-        $table->foreign(PermissionRegistrar::$pivotRole)
+        $table->foreign($pivotRole)
 -            ->references('id') // role id
 +            ->references('uuid') // role id
             ->on($tableNames['roles'])
             ->onDelete('cascade');//...
 
     Schema::create($tableNames['role_has_permissions'], function (Blueprint $table) use ($tableNames) {
--        $table->unsignedBigInteger(PermissionRegistrar::$pivotPermission);
--        $table->unsignedBigInteger(PermissionRegistrar::$pivotRole);
-+        $table->uuid(PermissionRegistrar::$pivotPermission);
-+        $table->uuid(PermissionRegistrar::$pivotRole);
+-        $table->unsignedBigInteger($pivotPermission);
+-        $table->unsignedBigInteger($pivotRole);
++        $table->uuid($pivotPermission);
++        $table->uuid($pivotRole);
+
+         $table->foreign($pivotPermission)
+-            ->references('id') // permission id
++            ->references('uuid') // permission id
+            ->on($tableNames['permissions'])
+            ->onDelete('cascade');
+
+         $table->foreign($pivotRole)
+-            ->references('id') // role id
++            ->references('uuid') // role id
+            ->on($tableNames['roles'])
+            ->onDelete('cascade'); 
 ```
 
 
 ## Configuration (OPTIONAL)
 You might want to change the pivot table field name from `model_id` to `model_uuid`, just for semantic purposes.
-For this, in the configuration file edit `column_names.model_morph_key`:
+For this, in the `permissions.php` configuration file edit `column_names.model_morph_key`:
 
 - OPTIONAL: Change to `model_uuid` instead of the default `model_id`.
 ```diff
@@ -91,10 +105,10 @@ For this, in the configuration file edit `column_names.model_morph_key`:
 +            'model_morph_key' => 'model_uuid',
         ],
 ```
-- If you extend the models into your app, be sure to list those models in your configuration file. See the Extending section of the documentation and the Models section below.
+- If you extend the models into your app, be sure to list those models in your `permissions.php` configuration file. See the Extending section of the documentation and the Models section below.
 
 ## Models
-If you want all the role/permission objects to have a UUID instead of an integer, you will need to Extend the default Role and Permission models into your own namespace in order to set some specific properties. (See the Extending section of the docs, where it explains requirements of Extending, as well as the configuration settings you need to update.)
+If you want all the role/permission objects to have a UUID instead of an integer, you will need to Extend the default Role and Permission models into your own namespace in order to set some specific properties. (See the Extending section of the docs, where it explains requirements of Extending, as well as the `permissions.php` configuration settings you need to update.)
 
 Examples:
 

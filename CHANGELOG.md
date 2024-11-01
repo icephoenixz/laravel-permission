@@ -2,6 +2,32 @@
 
 All notable changes to `laravel-permission` will be documented in this file
 
+## 6.9.0 - 2024-06-22
+
+### What's Changed
+
+* Use `->withPivot()` for teamed relationships (allows `getPivotColumns()`) by @juliangums in https://github.com/spatie/laravel-permission/pull/2679
+* Update docblock on `$role->hasPermissionTo()` to include `BackedEnum` by @drbyte co-authored by @SanderMuller
+* [Docs] Clarify that `$guard_name` can be an array by @angelej in https://github.com/spatie/laravel-permission/pull/2659
+* Fix misc typos in changelog by @szepeviktor in https://github.com/spatie/laravel-permission/pull/2686
+
+### New Contributors
+
+* @angelej made their first contribution in https://github.com/spatie/laravel-permission/pull/2659
+* @SanderMuller made their first contribution in #2676
+* @szepeviktor made their first contribution in https://github.com/spatie/laravel-permission/pull/2686
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.8.0...6.9.0
+
+## 6.8.0 - 2024-06-21
+
+### What's Changed
+
+* Fix can't save the same model twice by @erikn69 in https://github.com/spatie/laravel-permission/pull/2658
+* Fix phpstan from #2616 by @erikn69 in https://github.com/spatie/laravel-permission/pull/2685
+
+**Full Changelog**: https://github.com/spatie/laravel-permission/compare/6.7.0...6.8.0
+
 ## 6.7.0 - 2024-04-19
 
 ### What's Changed
@@ -16,7 +42,7 @@ All notable changes to `laravel-permission` will be documented in this file
 
 * Roles: Support for casting role names to enums by @gajosadrian in https://github.com/spatie/laravel-permission/pull/2616
 * Fix permission:show UUID error #2581 by @drbyte in https://github.com/spatie/laravel-permission/pull/2582
-* Cover WilcardPermission instance verification based on its own guard (Allow hasAllPermissions and hasAnyPermission to run on custom guard for WildcardPermission) by @AlexandreBellas in https://github.com/spatie/laravel-permission/pull/2608
+* Cover WildcardPermission instance verification based on its own guard (Allow hasAllPermissions and hasAnyPermission to run on custom guard for WildcardPermission) by @AlexandreBellas in https://github.com/spatie/laravel-permission/pull/2608
 * Register Laravel "About" details by @drbyte in https://github.com/spatie/laravel-permission/pull/2584
 
 ### New Contributors
@@ -529,7 +555,7 @@ Just a maintenance release.
 
 ## 5.2.0 - 2021-10-28
 
-- [V5] Fix detaching on all teams intstead of only current #1888 by @erikn69 in https://github.com/spatie/laravel-permission/pull/1890
+- [V5] Fix detaching on all teams instead of only current #1888 by @erikn69 in https://github.com/spatie/laravel-permission/pull/1890
 - [V5] Add uuid compatibility support on teams by @erikn69 in https://github.com/spatie/laravel-permission/pull/1857
 - Adds setRoleClass method to PermissionRegistrar by @timschwartz in https://github.com/spatie/laravel-permission/pull/1867
 - Load permissions for preventLazyLoading by @bahramsadin in https://github.com/spatie/laravel-permission/pull/1884
@@ -817,6 +843,8 @@ The following changes are not "breaking", but worth making the updates to your a
 
 
 
+
+
 ```
 1. Also this is a good time to point out that now with v2.25.0 and v2.26.0 most permission-cache-reset scenarios may no longer be needed in your app, so it's worth reviewing those cases, as you may gain some app speed improvement by removing unnecessary cache resets.
 
@@ -864,6 +892,8 @@ The following changes are not "breaking", but worth making the updates to your a
 @elserole('roleB')
  // user hasRole 'roleB' but not 'roleA'
 @endrole
+
+
 
 
 
@@ -1194,7 +1224,7 @@ BEST NOT TO USE v2.7.7 if you've changed tablenames in the config file.
 
 ** this version does not work in Laravel 5.1, please upgrade to version 1.5.1 of this package
 
-- allowed `givePermissonTo` to accept multiple permissions
+- allowed `givePermissionTo` to accept multiple permissions
 - allowed `assignRole` to accept multiple roles
 - added `syncPermissions`-method
 - added `syncRoles`-method

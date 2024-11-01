@@ -7,7 +7,7 @@ weight: 2
 
 You may discover that it is best to flush this package's cache **BEFORE seeding, to avoid cache conflict errors**.
 
-And if you use the `WithoutModelEvents` trait in your seeders, flush it **AFTER seeding as well**.
+And if you use the `WithoutModelEvents` trait in your seeders, flush it **AFTER creating any roles/permissions as well, before assigning or granting them.**.
 
 ```php
 // reset cached roles and permissions
@@ -17,6 +17,10 @@ app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
 You can optionally flush the cache before seeding by using the `SetUp()` method of your test suite (see the Testing page in the docs).
 
 Or it can be done directly in a seeder class, as shown below.
+
+## Database Cache Store
+
+TIP: If you have `CACHE_STORE=database` set in your `.env`, remember that [you must install Laravel's cache tables via a migration before performing any cache operations](https://laravel.com/docs/cache#prerequisites-database). If you fail to install those migrations, you'll run into errors like `Call to a member function perform() on null` when the cache store attempts to purge or update the cache. This package does strategic cache resets in various places, so may trigger that error if your app's cache dependencies aren't set up.
 
 ## Roles/Permissions Seeder
 
@@ -39,6 +43,10 @@ class RolesAndPermissionsSeeder extends Seeder
         Permission::create(['name' => 'delete articles']);
         Permission::create(['name' => 'publish articles']);
         Permission::create(['name' => 'unpublish articles']);
+
+        // update cache to know about the newly created permissions (required if using WithoutModelEvents in seeders)
+        app()[\Spatie\Permission\PermissionRegistrar::class]->forgetCachedPermissions();
+
 
         // create roles and assign created permissions
 

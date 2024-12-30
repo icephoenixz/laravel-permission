@@ -199,14 +199,6 @@ class PermissionRegistrar
             $this->cacheKey, $this->cacheExpirationTime, fn () => $this->getSerializedPermissionsForCache()
         );
 
-        // fallback for old cache method, must be removed on next mayor version
-        if (! isset($this->permissions['alias'])) {
-            $this->forgetCachedPermissions();
-            $this->loadPermissions();
-
-            return;
-        }
-
         $this->alias = $this->permissions['alias'];
 
         $this->hydrateRolesCache();
@@ -357,7 +349,7 @@ class PermissionRegistrar
 
     private function getHydratedPermissionCollection(): Collection
     {
-        $permissionInstance = new ($this->getPermissionClass())();
+        $permissionInstance = (new ($this->getPermissionClass())())->newInstance([], true);
 
         return Collection::make(array_map(
             fn ($item) => (clone $permissionInstance)
@@ -376,7 +368,7 @@ class PermissionRegistrar
 
     private function hydrateRolesCache(): void
     {
-        $roleInstance = new ($this->getRoleClass())();
+        $roleInstance = (new ($this->getRoleClass())())->newInstance([], true);
 
         array_map(function ($item) use ($roleInstance) {
             $role = (clone $roleInstance)
